@@ -1,0 +1,33 @@
+plugins {
+
+    id 'java'
+    id 'application'
+    id 'org.jetbrains.kotlin.jvm' version '1.4.21'
+    id "com.github.johnrengelman.shadow" version "6.1.0"
+}
+
+group 'uk.co.innoxium.ostool'
+version '1.0-SNAPSHOT'
+mainClassName = "uk.co.innoxium.ostool.OSToolKt"
+
+repositories {
+
+    mavenCentral()
+    maven {
+
+        name = "Innoxium Repo"
+        url = "https://repo.repsy.io/mvn/innoxium/innoxium/"
+    }
+}
+
+dependencies {
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+
+    implementation "uk.co.innoxium.cybernize:cybernize:1.1.6"
+    implementation 'uk.co.innoxium.swing:swingext:0.1'
+}
+
+test {
+    useJUnitPlatform()
+}
