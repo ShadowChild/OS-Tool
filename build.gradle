@@ -26,6 +26,7 @@ dependencies {
 
     implementation "uk.co.innoxium.cybernize:cybernize:1.1.6"
     implementation 'uk.co.innoxium.swing:swingext:0.1'
+    implementation "com.github.dyorgio.runtime:run-as-root:1.2.3"
 }
 
 test {

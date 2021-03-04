@@ -1,5 +1,6 @@
 package uk.co.innoxium.ostool
 
+import dyorgio.runtime.run.`as`.root.RootExecutor
 import uk.co.innoxium.ostool.menu.Exit
 import uk.co.innoxium.ostool.menu.ExitCodes
 import uk.co.innoxium.ostool.menu.Menu
@@ -13,7 +14,7 @@ import kotlin.system.exitProcess
 fun main(args: Array<String>) {
 
     // Load menus
-    OSTool().addMenus()
+    OSTool.addMenus()
 
     var currMenu = Menu.baseMenu
 
@@ -35,40 +36,47 @@ fun main(args: Array<String>) {
 
 class OSTool {
 
-    fun addMenus() {
+    companion object OSTool {
 
-        // Returns true if we were able to find a supported platform
-        val ret = when {
+        // We need to run as root to be able to run certain commands
+        val rootExecutor = RootExecutor()
 
-            DesktopUtil.isWindows() -> {
+        @JvmStatic
+        fun addMenus() {
 
-                WindowsTools.loadMenu()
-                true
+            // Returns true if we were able to find a supported platform
+            val ret = when {
+
+                DesktopUtil.isWindows() -> {
+
+                    WindowsTools.loadMenu()
+                    true
+                }
+                DesktopUtil.isMac() -> {
+
+                    MacTools.loadMenu()
+                    true
+                }
+                DesktopUtil.isUnix() -> {
+
+                    UnixTools.loadMenu()
+                    true
+                }
+                else -> false
             }
-            DesktopUtil.isMac() -> {
+            if (!ret) {
 
-                MacTools.loadMenu()
-                true
+                // We are running a platform that's unsupported
+                // This should never be called, but here as a failsafe
+                println("OS Unsupported, aborting....")
+                exitProcess(ExitCodes.OS_UNSUPPORTED.code)
             }
-            DesktopUtil.isUnix() -> {
-
-                UnixTools.loadMenu()
-                true
-            }
-            else -> false
+            Menu.baseMenu.addMenuItem(Exit())
         }
-        if(!ret) {
 
-            // We are running a platform that's unsupported
-            // This should never be called, but here as a failsafe
-            println("OS Unsupported, aborting....")
-            exitProcess(ExitCodes.OS_UNSUPPORTED.code)
+        fun printMenus(menuItem: MenuItem) {
+
+
         }
-        Menu.baseMenu.addMenuItem(Exit())
-    }
-
-    fun printMenus(menuItem: MenuItem) {
-
-
     }
 }
